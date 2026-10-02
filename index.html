@@ -10,6 +10,45 @@
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+
+  <!-- Soft preview lock (not real auth — rotate before wider share) -->
+  <div id="preview-gate" style="position:fixed;inset:0;z-index:99999;background:#0a0c0e;display:flex;align-items:center;justify-content:center;padding:24px;font-family:system-ui,sans-serif;color:#e8eef2;">
+    <form id="preview-gate-form" style="width:min(360px,100%);border:1px solid #2a3540;border-radius:12px;padding:24px;background:#12161a;">
+      <p style="margin:0 0 8px;font-size:14px;letter-spacing:.04em;text-transform:uppercase;color:#5ec8d8;">Preview lock</p>
+      <h2 style="margin:0 0 12px;font-size:20px;">10th Mountain Link Hub</h2>
+      <p style="margin:0 0 16px;font-size:14px;color:#9aa7b2;">Enter the password to open the page.</p>
+      <label for="preview-pw" style="display:block;font-size:12px;margin-bottom:6px;color:#9aa7b2;">Password</label>
+      <input id="preview-pw" name="password" type="password" autocomplete="current-password" required style="width:100%;box-sizing:border-box;padding:12px;border-radius:8px;border:1px solid #2a3540;background:#0a0c0e;color:#e8eef2;margin-bottom:12px;">
+      <p id="preview-gate-err" hidden style="margin:0 0 12px;font-size:13px;color:#f0a060;">Wrong password.</p>
+      <button type="submit" style="width:100%;padding:12px;border:0;border-radius:8px;background:#5ec8d8;color:#0a0c0e;font-weight:700;cursor:pointer;">Open</button>
+    </form>
+  </div>
+  <script>
+  (function () {
+    var KEY = 'mtnHubPreviewOk';
+    var EXPECT = 'allthepresidentsmen';
+    var gate = document.getElementById('preview-gate');
+    if (sessionStorage.getItem(KEY) === '1') {
+      if (gate) gate.remove();
+      return;
+    }
+    document.documentElement.style.overflow = 'hidden';
+    var form = document.getElementById('preview-gate-form');
+    var err = document.getElementById('preview-gate-err');
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+      var v = document.getElementById('preview-pw').value;
+      if (v === EXPECT) {
+        sessionStorage.setItem(KEY, '1');
+        document.documentElement.style.overflow = '';
+        gate.remove();
+      } else if (err) {
+        err.hidden = false;
+      }
+    });
+  })();
+  </script>
+
   <a class="skip" href="#main">Skip to links</a>
 
   <!-- HARD FENCE: unofficial banner — sticky, visible without scroll -->
